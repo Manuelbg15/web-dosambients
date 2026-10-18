@@ -1,0 +1,132 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import SocialIcon from '../components/SocialIcon.astro';
+import ContactForm from '../components/ContactForm.astro';
+import { site } from '../data/site';
+import { links, isActive } from '../data/links';
+---
+
+<Layout
+  title="Contacto"
+  description="Contacta con Dos Ambients: C/ Mª Rosa Molas 15, 12004 Castellón de la Plana. Tel. 964 22 38 64 · info@dosambients.es"
+>
+  <PageHero title="Contacta con *nosotros*" eyebrow="Contacta ahora mismo" image="/images/hero/hero-1.webp" subtitle="Cuéntanos, nos encargaremos de asesorarte para que todo salga como lo habías pensado." crumbs={[{ label: 'Contacto' }]} overlap />
+
+  <section class="relative pb-24 md:pb-32">
+    <div class="container-site relative z-10 -mt-16 grid gap-8 md:-mt-24 lg:grid-cols-5">
+      <!-- Tarjeta de datos -->
+      <div class="grain relative overflow-hidden rounded-[2rem] bg-ink p-8 text-white shadow-2xl md:p-12 lg:col-span-2" data-reveal>
+        <div class="relative z-[2]">
+          <p class="eyebrow !text-brand-300">Visítanos</p>
+          <h2 class="mt-5 font-display text-3xl font-bold uppercase">Estamos en <span class="script text-brand-300 normal-case">Castellón</span></h2>
+          <ul class="mt-10 space-y-7">
+            <li class="flex gap-4">
+              <span class="contact-ico"><Icon name="pin" /></span>
+              <a href={links.googleMaps.url} target="_blank" rel="noopener" class="group">
+                <span class="block font-semibold group-hover:text-brand-300">{site.address.street}</span>
+                <span class="block text-white/70">{site.address.postalCode} {site.address.city}</span>
+                <span class="block text-sm text-white/50">{site.address.note}</span>
+              </a>
+            </li>
+            <li class="flex items-center gap-4">
+              <span class="contact-ico"><Icon name="phone" /></span>
+              <a href={site.phoneHref} class="font-display text-2xl font-bold hover:text-brand-300">{site.phone}</a>
+            </li>
+            <li class="flex items-center gap-4">
+              <span class="contact-ico"><SocialIcon name="whatsapp" /></span>
+              <a href={links.whatsapp.url} target="_blank" rel="noopener" class="font-display text-2xl font-bold hover:text-brand-300">{site.mobile}</a>
+            </li>
+            <li class="flex items-center gap-4">
+              <span class="contact-ico"><Icon name="mail" /></span>
+              <a href={`mailto:${site.email}`} class="font-semibold break-all hover:text-brand-300">{site.email}</a>
+            </li>
+            {
+              site.openingHours && (
+                <li class="flex items-center gap-4">
+                  <span class="contact-ico"><Icon name="clock" /></span>
+                  <span>{site.openingHours}</span>
+                </li>
+              )
+            }
+          </ul>
+          <div class="mt-12 flex flex-wrap gap-x-8 gap-y-3">
+            <a href={links.facebook.url} target="_blank" rel="noopener" class="inline-flex items-center gap-3 text-sm font-semibold tracking-widest text-white/70 uppercase hover:text-white">
+              <SocialIcon name="facebook" class="h-5 w-5" /> Facebook
+            </a>
+            {
+              isActive(links.instagram) && (
+                <a href={links.instagram.url} target="_blank" rel="noopener" class="inline-flex items-center gap-3 text-sm font-semibold tracking-widest text-white/70 uppercase hover:text-white">
+                  <SocialIcon name="instagram" class="h-5 w-5" /> Instagram
+                </a>
+              )
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Formulario -->
+      <div class="rounded-[2rem] bg-white p-8 shadow-2xl shadow-black/10 ring-1 ring-black/5 md:p-12 lg:col-span-3" data-reveal style="--d:150">
+        <p class="eyebrow">Mándanos un mensaje</p>
+        <h2 class="mt-5 font-display text-3xl font-bold uppercase">Respondemos <span class="script text-brand-500 normal-case">gustosamente</span> tus dudas</h2>
+        <div id="form-error" class="mt-6 hidden rounded-xl border border-brand-300 bg-brand-50 p-4 text-brand-800" role="alert">
+          No se ha podido enviar el mensaje. Revisa los campos obligatorios o escríbenos directamente a
+          <a href={`mailto:${site.email}`} class="underline">{site.email}</a>.
+        </div>
+        <div class="mt-8">
+          <ContactForm />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mapa: se carga solo cuando el usuario lo pide (sin cookies de terceros antes del consentimiento) -->
+  <section id="mapa" class="bg-cream">
+    <div class="relative h-[460px] w-full" data-map={links.googleMapsEmbed.url}>
+      <div class="absolute inset-0 flex flex-col items-center justify-center gap-4 p-6 text-center">
+        <Icon name="pin" class="h-10 w-10 text-brand-500" />
+        <p class="max-w-md text-muted">
+          Al cargar el mapa, Google puede instalar cookies en tu navegador. Más información en nuestra
+          <a href="/politica-cookies/" class="text-brand-500 underline">política de cookies</a>.
+        </p>
+        <div class="flex flex-wrap justify-center gap-3">
+          <button type="button" class="btn btn-primary" data-map-load>Cargar mapa</button>
+          <a href={links.googleMaps.url} target="_blank" rel="noopener" class="btn border-2 border-brand-500 text-brand-500 hover:bg-brand-50">Abrir en Google Maps</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    if (new URLSearchParams(location.search).has('error')) {
+      document.getElementById('form-error')?.classList.remove('hidden');
+    }
+    const box = document.querySelector<HTMLElement>('[data-map]');
+    box?.querySelector('[data-map-load]')?.addEventListener('click', () => {
+      const iframe = document.createElement('iframe');
+      iframe.src = box.dataset.map!;
+      iframe.title = 'Mapa de ubicación de Dos Ambients';
+      iframe.loading = 'lazy';
+      iframe.referrerPolicy = 'no-referrer-when-downgrade';
+      iframe.className = 'h-full w-full border-0';
+      box.replaceChildren(iframe);
+    });
+  });
+</script>
+
+<style>
+  .contact-ico {
+    display: flex;
+    height: 3rem;
+    width: 3rem;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    background: rgb(255 255 255 / 0.08);
+    color: var(--color-brand-300);
+  }
+</style>

@@ -1,0 +1,118 @@
+---
+import Icon from './Icon.astro';
+import SocialIcon from './SocialIcon.astro';
+import { nav, legalNav, site } from '../data/site';
+import { links, isActive } from '../data/links';
+const year = new Date().getFullYear();
+---
+
+<footer class="grain relative overflow-hidden bg-ink text-white/75">
+  <div class="container-site relative z-[2] grid gap-12 pt-20 pb-12 md:grid-cols-2 lg:grid-cols-12">
+    <div class="lg:col-span-4">
+      <img src="/images/logo-dosambients-blanco.webp" alt="Dos Ambients" width="250" height="74" class="h-14 w-auto" loading="lazy" />
+      <p class="mt-6 max-w-xs leading-relaxed">
+        Desde el año {site.foundedYear} en Castellón. Cocinas, baños, armarios y muebles a medida, suelo y carpintería en general.
+      </p>
+      <div class="mt-6 flex gap-3">
+        <a href={links.facebook.url} target="_blank" rel="noopener" aria-label="Facebook" class="social-btn"><SocialIcon name="facebook" class="h-5 w-5" /></a>
+        <a href={links.whatsapp.url} target="_blank" rel="noopener" aria-label="WhatsApp" class="social-btn"><SocialIcon name="whatsapp" class="h-5 w-5" /></a>
+        {
+          isActive(links.instagram) && (
+            <a href={links.instagram.url} target="_blank" rel="noopener" aria-label="Instagram" class="social-btn">
+              <SocialIcon name="instagram" class="h-5 w-5" />
+            </a>
+          )
+        }
+      </div>
+    </div>
+
+    <div class="lg:col-span-2">
+      <h2 class="footer-title">Navegación</h2>
+      <ul class="space-y-2.5 text-sm">
+        {nav.map((item) => <li><a href={item.href} class="footer-link">{item.label}</a></li>)}
+      </ul>
+    </div>
+
+    <div class="lg:col-span-4">
+      <h2 class="footer-title">Visítanos</h2>
+      <ul class="space-y-4 text-sm">
+        <li class="flex gap-3">
+          <Icon name="pin" class="mt-0.5 h-5 w-5 shrink-0 text-brand-300" />
+          <a href={links.googleMaps.url} target="_blank" rel="noopener" class="footer-link">
+            {site.address.street}<br />{site.address.postalCode} {site.address.city}<br />
+            <span class="text-white/50">{site.address.note}</span>
+          </a>
+        </li>
+        <li class="flex gap-3">
+          <Icon name="phone" class="h-5 w-5 shrink-0 text-brand-300" />
+          <a href={site.phoneHref} class="footer-link">{site.phone}</a>
+        </li>
+        <li class="flex gap-3">
+          <SocialIcon name="whatsapp" class="h-5 w-5 shrink-0 text-brand-300" />
+          <a href={links.whatsapp.url} target="_blank" rel="noopener" class="footer-link">{site.mobile}</a>
+        </li>
+        <li class="flex gap-3">
+          <Icon name="mail" class="h-5 w-5 shrink-0 text-brand-300" />
+          <a href={`mailto:${site.email}`} class="footer-link">{site.email}</a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="lg:col-span-2">
+      <h2 class="footer-title">Legal</h2>
+      <ul class="space-y-2.5 text-sm">
+        {legalNav.map((item) => <li><a href={item.href} class="footer-link">{item.label}</a></li>)}
+      </ul>
+    </div>
+  </div>
+
+  <!-- Firma gigante -->
+  <div class="pointer-events-none relative z-[1] -mb-[0.22em] overflow-hidden text-center select-none" aria-hidden="true">
+    <span class="script inline-block bg-gradient-to-b from-white/15 to-white/0 bg-clip-text px-[0.15em] text-[15.5vw] leading-[1.1] whitespace-nowrap text-transparent">
+      Dos Ambients
+    </span>
+  </div>
+
+  <div class="relative z-[2] border-t border-white/10">
+    <div class="container-site flex flex-col items-center justify-between gap-2 py-6 text-xs text-white/50 sm:flex-row">
+      <p>© {year} {site.name}. Todos los derechos reservados.</p>
+      <a href="#contenido" class="group flex items-center gap-2 tracking-widest uppercase hover:text-white">
+        Volver arriba
+        <Icon name="arrow" class="h-4 w-4 -rotate-90 transition-transform group-hover:-translate-y-1" />
+      </a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer-title {
+    margin-bottom: 1.25rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--color-brand-300);
+  }
+  .footer-link {
+    position: relative;
+    transition: color 0.3s;
+  }
+  .footer-link:hover {
+    color: white;
+  }
+  .social-btn {
+    display: flex;
+    height: 2.75rem;
+    width: 2.75rem;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    border: 1px solid rgb(255 255 255 / 0.15);
+    transition: all 0.3s;
+  }
+  .social-btn:hover {
+    border-color: var(--color-brand-500);
+    background: var(--color-brand-500);
+    color: white;
+    transform: translateY(-3px);
+  }
+</style>

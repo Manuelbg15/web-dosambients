@@ -1,0 +1,296 @@
+---
+import Icon from './Icon.astro';
+import SocialIcon from './SocialIcon.astro';
+import { nav, site } from '../data/site';
+import { links, isActive } from '../data/links';
+
+interface Props {
+  /** Cabecera transparente sobre una imagen oscura hasta que se hace scroll */
+  overlay?: boolean;
+}
+const { overlay = true } = Astro.props;
+
+const path = Astro.url.pathname.replace(/\/?$/, '/');
+const isCurrent = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
+---
+
+<header id="site-header" class:list={['site-header fixed inset-x-0 top-0 z-50', overlay ? 'is-overlay' : 'is-solid']}>
+  <div class="mx-auto flex h-20 w-full max-w-[1760px] items-center justify-between gap-6 px-4 sm:px-6 lg:px-10">
+    <a href="/" class="relative z-10 shrink-0" aria-label="Dos Ambients, ir al inicio">
+      <img src="/images/logo-dosambients.webp" alt="Dos Ambients" width="250" height="74" class="logo-color h-11 w-auto md:h-12" />
+      <img src="/images/logo-dosambients-blanco.webp" alt="" aria-hidden="true" width="250" height="74" class="logo-white absolute inset-0 h-11 w-auto md:h-12" />
+    </a>
+
+    <!-- Menú de escritorio (≥1536 px) -->
+    <nav class="hidden 2xl:block" aria-label="Menú principal">
+      <ul class="flex items-center gap-8">
+        {
+          nav.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                aria-current={isCurrent(item.href) ? 'page' : undefined}
+                class="nav-link font-display text-[0.8rem] font-semibold tracking-[0.16em] whitespace-nowrap uppercase"
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <div class="hidden shrink-0 items-center gap-5 2xl:flex">
+      <a href={site.phoneHref} class="header-muted flex items-center gap-2 text-sm font-semibold whitespace-nowrap">
+        <Icon name="phone" class="h-4 w-4" />
+        {site.phone}
+      </a>
+      <a href={links.whatsapp.url} target="_blank" rel="noopener" aria-label="WhatsApp de Dos Ambients" class="header-muted">
+        <SocialIcon name="whatsapp" />
+      </a>
+      <a href={links.facebook.url} target="_blank" rel="noopener" aria-label="Facebook de Dos Ambients" class="header-muted">
+        <SocialIcon name="facebook" />
+      </a>
+      {
+        isActive(links.instagram) && (
+          <a href={links.instagram.url} target="_blank" rel="noopener" aria-label="Instagram de Dos Ambients" class="header-muted">
+            <SocialIcon name="instagram" />
+          </a>
+        )
+      }
+      <a href="/contacto/" class="btn btn-primary !py-2.5 shadow-lg shadow-brand-900/20">Pide presupuesto</a>
+    </div>
+
+    <!-- Botón hamburguesa (<1536 px) -->
+    <button
+      id="menu-toggle"
+      type="button"
+      class="burger relative z-10 flex h-12 w-12 items-center justify-center rounded-full 2xl:hidden"
+      aria-controls="mobile-menu"
+      aria-expanded="false"
+    >
+      <span class="sr-only">Abrir menú</span>
+      <span class="burger-lines" aria-hidden="true"><span></span><span></span><span></span></span>
+    </button>
+  </div>
+
+  <div id="scroll-progress" class="absolute bottom-0 left-0 h-[2px] w-full origin-left scale-x-0 bg-brand-500" aria-hidden="true"></div>
+
+</header>
+
+<!-- Menú móvil a pantalla completa: fuera del <header> porque el backdrop-filter de la cabecera
+     confinaría un hijo "fixed" a la altura de la barra. -->
+  <nav id="mobile-menu" class="mobile-menu grain fixed inset-0 z-[45] bg-ink 2xl:hidden" aria-label="Menú principal" inert>
+    <img src="/images/catalogo/catalogo-23.webp" alt="" class="absolute inset-0 h-full w-full object-cover opacity-15" loading="lazy" />
+    <div class="container-site relative z-[2] flex h-full flex-col justify-center pt-20 pb-10">
+      <ul class="space-y-1">
+        {
+          nav.map((item, i) => (
+            <li class="menu-item" style={`--i:${i}`}>
+              <a
+                href={item.href}
+                aria-current={isCurrent(item.href) ? 'page' : undefined}
+                class="group flex items-baseline gap-4 py-1 font-display text-[2rem] leading-tight font-bold text-white uppercase sm:text-5xl"
+              >
+                <span class="font-sans text-sm font-semibold text-brand-300">0{i + 1}</span>
+                <span class="transition-colors group-hover:text-brand-300 group-aria-[current=page]:text-brand-300">{item.label}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <div class="menu-item mt-12 flex flex-wrap items-center gap-4" style={`--i:${nav.length}`}>
+        <a href={site.phoneHref} class="btn btn-primary"><Icon name="phone" class="h-4 w-4" /> {site.phone}</a>
+        <a href={links.whatsapp.url} target="_blank" rel="noopener" class="btn btn-outline text-white">
+          <SocialIcon name="whatsapp" class="h-4 w-4" /> WhatsApp
+        </a>
+        <a href={links.facebook.url} target="_blank" rel="noopener" aria-label="Facebook de Dos Ambients" class="text-white hover:text-brand-300">
+          <SocialIcon name="facebook" class="h-7 w-7" />
+        </a>
+        {
+          isActive(links.instagram) && (
+            <a href={links.instagram.url} target="_blank" rel="noopener" aria-label="Instagram de Dos Ambients" class="text-white hover:text-brand-300">
+              <SocialIcon name="instagram" class="h-7 w-7" />
+            </a>
+          )
+        }
+      </div>
+      <p class="menu-item mt-10 text-sm text-white/60" style={`--i:${nav.length + 1}`}>
+        {site.address.street} · {site.address.postalCode} {site.address.city}
+      </p>
+    </div>
+  </nav>
+
+
+<style>
+  .site-header {
+    transition:
+      background-color 0.4s ease,
+      box-shadow 0.4s ease,
+      backdrop-filter 0.4s ease;
+  }
+  /* Estado sólido: al hacer scroll o en páginas sin imagen de cabecera */
+  .site-header.is-solid,
+  .site-header.is-scrolled {
+    background: rgb(255 255 255 / 0.88);
+    backdrop-filter: blur(14px) saturate(1.4);
+    box-shadow: 0 1px 0 rgb(0 0 0 / 0.06), 0 10px 30px -12px rgb(0 0 0 / 0.15);
+  }
+  /* Con el menú abierto la barra se funde con el menú */
+  .site-header.menu-open {
+    background: transparent;
+    backdrop-filter: none;
+    box-shadow: none;
+  }
+  .site-header.menu-open #scroll-progress {
+    opacity: 0;
+  }
+  .logo-white {
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  .logo-color {
+    transition: opacity 0.4s ease;
+  }
+  .site-header.is-overlay:not(.is-scrolled) .logo-white,
+  .site-header.menu-open .logo-white {
+    opacity: 1;
+  }
+  .site-header.is-overlay:not(.is-scrolled) .logo-color,
+  .site-header.menu-open .logo-color {
+    opacity: 0;
+  }
+
+  .nav-link {
+    position: relative;
+    color: var(--color-ink);
+    transition: color 0.3s;
+  }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    height: 2px;
+    width: 100%;
+    background: var(--color-brand-500);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.5s var(--ease-out-expo);
+  }
+  .nav-link:hover::after,
+  .nav-link[aria-current='page']::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+  .nav-link[aria-current='page'],
+  .nav-link:hover {
+    color: var(--color-brand-500);
+  }
+  .header-muted {
+    color: var(--color-ink);
+    transition: color 0.3s;
+  }
+  .header-muted:hover {
+    color: var(--color-brand-500);
+  }
+  .site-header.is-overlay:not(.is-scrolled) .nav-link,
+  .site-header.is-overlay:not(.is-scrolled) .header-muted {
+    color: white;
+  }
+  .site-header.is-overlay:not(.is-scrolled) .nav-link::after {
+    background: white;
+  }
+
+  /* Hamburguesa animada */
+  .burger {
+    color: var(--color-ink);
+  }
+  .site-header.is-overlay:not(.is-scrolled) .burger,
+  .site-header.menu-open .burger {
+    color: white;
+  }
+  .burger-lines {
+    position: relative;
+    display: block;
+    width: 26px;
+    height: 16px;
+  }
+  .burger-lines span {
+    position: absolute;
+    left: 0;
+    height: 2px;
+    width: 100%;
+    border-radius: 2px;
+    background: currentColor;
+    transition:
+      transform 0.45s var(--ease-out-expo),
+      opacity 0.3s,
+      width 0.3s;
+  }
+  .burger-lines span:nth-child(1) { top: 0; }
+  .burger-lines span:nth-child(2) { top: 7px; width: 70%; }
+  .burger-lines span:nth-child(3) { top: 14px; }
+  .menu-open .burger-lines span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .menu-open .burger-lines span:nth-child(2) { opacity: 0; }
+  .menu-open .burger-lines span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* Menú móvil: se despliega como una cortina circular desde el botón */
+  .mobile-menu {
+    clip-path: circle(0% at calc(100% - 3rem) 2.5rem);
+    visibility: hidden;
+    transition:
+      clip-path 0.8s var(--ease-out-expo),
+      visibility 0s linear 0.8s;
+  }
+  .mobile-menu.is-open {
+    clip-path: circle(150% at calc(100% - 3rem) 2.5rem);
+    visibility: visible;
+    transition:
+      clip-path 0.9s var(--ease-out-expo),
+      visibility 0s;
+  }
+  .menu-item {
+    opacity: 0;
+    transform: translateY(30px);
+    transition:
+      opacity 0.5s,
+      transform 0.7s var(--ease-out-expo);
+  }
+  .mobile-menu.is-open .menu-item {
+    opacity: 1;
+    transform: none;
+    transition-delay: calc(0.25s + var(--i) * 0.06s);
+  }
+</style>
+
+<script>
+  // Los elementos se buscan en cada llamada porque View Transitions sustituye el DOM al navegar.
+  const setOpen = (open: boolean) => {
+    const header = document.getElementById('site-header');
+    const toggle = document.getElementById('menu-toggle');
+    const menu = document.getElementById('mobile-menu');
+    if (!header || !toggle || !menu) return;
+    header.classList.toggle('menu-open', open);
+    menu.classList.toggle('is-open', open);
+    toggle.setAttribute('aria-expanded', String(open));
+    menu.toggleAttribute('inert', !open);
+    document.body.style.overflow = open ? 'hidden' : '';
+    const label = toggle.querySelector('.sr-only');
+    if (label) label.textContent = open ? 'Cerrar menú' : 'Abrir menú';
+  };
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') setOpen(false);
+  });
+  window.matchMedia('(min-width: 1536px)').addEventListener('change', (e) => {
+    if (e.matches) setOpen(false);
+  });
+
+  document.addEventListener('astro:page-load', () => {
+    const toggle = document.getElementById('menu-toggle');
+    setOpen(false);
+    toggle?.addEventListener('click', () => setOpen(toggle.getAttribute('aria-expanded') !== 'true'));
+    document.querySelectorAll('#mobile-menu a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+  });
+</script>

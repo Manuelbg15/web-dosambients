@@ -1,0 +1,21 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import Gallery from '../components/Gallery.astro';
+import BigCta from '../components/BigCta.astro';
+import { catalog } from '../data/gallery';
+---
+
+<Layout
+  title="Catálogo"
+  description="Catálogo de Dos Ambients: cocinas, baños, armarios y mobiliario de las mejores marcas. Tenemos lo que necesitas."
+  image="/images/catalogo/catalogo-01.webp"
+>
+  <PageHero title="Nuestro *catálogo*" eyebrow="Tenemos lo que necesitas" subtitle="Cocinas, baños, armarios y mobiliario de las mejores marcas, a un precio competitivo." image="/images/catalogo/catalogo-05.webp" crumbs={[{ label: 'Catálogo' }]} />
+  <section class="py-20 md:py-28">
+    <div class="container-site">
+      <Gallery items={catalog} />
+    </div>
+  </section>
+  <BigCta />
+</Layout>

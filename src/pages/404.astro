@@ -1,0 +1,17 @@
+---
+import Layout from '../layouts/Layout.astro';
+---
+
+<Layout title="Página no encontrada" noindex overlay={false}>
+  <section class="py-24">
+    <div class="container-site max-w-xl text-center">
+      <p class="font-display text-7xl font-bold text-brand-500">404</p>
+      <h1 class="mt-4 text-3xl uppercase">Página no encontrada</h1>
+      <p class="mt-4 text-muted">La página que buscas no existe o ha cambiado de dirección.</p>
+      <div class="mt-8 flex flex-wrap justify-center gap-3">
+        <a href="/" class="btn btn-primary">Ir al inicio</a>
+        <a href="/contacto/" class="btn border-2 border-brand-500 text-brand-500 hover:bg-brand-50">Contacto</a>
+      </div>
+    </div>
+  </section>
+</Layout>

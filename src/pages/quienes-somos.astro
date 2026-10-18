@@ -1,0 +1,132 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import SplitText from '../components/SplitText.astro';
+import Marquee from '../components/Marquee.astro';
+import BigCta from '../components/BigCta.astro';
+import { services } from '../data/services';
+import { site } from '../data/site';
+
+const highlights = ['Proyectos completados', 'Clientes satisfechos', 'Mejores marcas', 'Diseño personalizado'];
+
+const history = [
+  { year: '2000', title: 'Nacimiento', text: 'Comenzamos este proyecto con ilusión y energía.' },
+  { year: '2008', title: 'Crecimiento', text: 'Disponemos de una sólida estructura tras la experiencia adquirida.' },
+  { year: 'Hoy', title: 'Actualidad', text: 'Seguimos mejorando desde la base que nos dan tantos años dando el mejor servicio, desde el año 2000.' },
+];
+---
+
+<Layout
+  title="Quiénes somos"
+  description="Dos Ambients nació en Castellón en el año 2000. Especialistas en muebles a medida, cocinas, baños, armarios, suelo y carpintería."
+  image="/images/catalogo/catalogo-11.webp"
+>
+  <PageHero
+    title="Quiénes *somos*"
+    eyebrow={`Desde el año ${site.foundedYear}`}
+    subtitle="Bienvenidos a Dos Ambients. Servicio y calidad nos avalan."
+    image="/images/catalogo/catalogo-11.webp"
+  />
+
+  <!-- Sobre nosotros -->
+  <section class="overflow-hidden py-24 md:py-32">
+    <div class="container-site grid items-center gap-16 lg:grid-cols-2">
+      <div>
+        <p class="eyebrow" data-reveal>Sobre nosotros</p>
+        <SplitText as="h2" text="Bienvenidos a *Dos Ambients*" class="display-lg mt-5" accentClass="script text-brand-500 normal-case" />
+        <div class="mt-8 space-y-5 text-lg leading-relaxed text-muted">
+          <p data-reveal style="--d:150">
+            Dos Ambients nació en Castellón en el año {site.foundedYear}, y desde entonces estamos situados en la
+            C/ Mª Rosa Molas, esquina Camino La Plana (rotonda de las cañas).
+          </p>
+          <p data-reveal style="--d:250">
+            Trabajamos para aportar soluciones a nuestros clientes, ofreciendo una amplia gama de productos para el
+            baño, la cocina, los armarios, suelo y carpintería en general. Somos especialistas en muebles a medida,
+            intentando satisfacer vuestras necesidades. Para ello contamos con la incorporación de los últimos
+            materiales y de los diseños más innovadores, así como con el entusiasmo de todo el equipo humano.
+          </p>
+          <blockquote class="border-l-4 border-brand-500 pl-6 font-display text-xl font-semibold text-ink" data-reveal style="--d:350">
+            Consideramos imprescindible la relación con nuestros clientes para poder dar un servicio de calidad, ágil
+            y eficaz desde el proyecto inicial hasta la instalación en vuestra casa.
+          </blockquote>
+        </div>
+      </div>
+      <div class="relative grid grid-cols-2 gap-4">
+        <div class="overflow-hidden rounded-[1.5rem]" data-reveal="clip">
+          <img src="/images/disenos/c0.webp" alt="Cocina lacada clásica realizada por Dos Ambients" class="aspect-[3/4] w-full object-cover" loading="lazy" />
+        </div>
+        <div class="mt-16 overflow-hidden rounded-[1.5rem]" data-reveal="clip" style="--d:250">
+          <img src="/images/disenos/a1.webp" alt="Armario a medida realizado por Dos Ambients" class="aspect-[3/4] w-full object-cover" loading="lazy" />
+        </div>
+        <span class="script absolute -bottom-10 left-1/2 -translate-x-1/2 text-7xl whitespace-nowrap text-brand-500/15 md:text-8xl" aria-hidden="true">a medida</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cifras -->
+  <section class="grain bg-brand-500 py-16 text-white">
+    <ul class="container-site relative z-[2] grid grid-cols-2 gap-10 text-center lg:grid-cols-4">
+      {
+        highlights.map((h, i) => (
+          <li data-reveal style={`--d:${i * 120}`}>
+            <span class="block font-display text-5xl font-bold md:text-6xl">
+              <span data-count="100">100</span>%
+            </span>
+            <span class="mt-2 block text-xs font-semibold tracking-[0.25em] text-white/80 uppercase">{h}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+
+  <!-- Historia -->
+  <section class="py-24 md:py-32">
+    <div class="container-site">
+      <div class="max-w-2xl">
+        <p class="eyebrow" data-reveal>Nuestra historia</p>
+        <SplitText as="h2" text="Servicio y calidad *nos avalan*" class="display-lg mt-5" accentClass="script text-brand-500 normal-case" />
+      </div>
+      <ol class="relative mt-20 border-l border-brand-200 md:grid md:grid-cols-3 md:border-t md:border-l-0">
+        {
+          history.map((h, i) => (
+            <li class="relative pb-14 pl-10 md:pt-12 md:pr-10 md:pb-0 md:pl-0" data-reveal style={`--d:${i * 200}`}>
+              <span class="absolute top-1 -left-1.5 h-3 w-3 rounded-full bg-brand-500 ring-8 ring-white md:-top-1.5 md:left-0" aria-hidden="true" />
+              <span class="outline-num block text-7xl leading-none md:text-8xl">{h.year}</span>
+              <h3 class="mt-6 text-xl uppercase">{h.title}</h3>
+              <p class="mt-2 max-w-xs text-muted">{h.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <Marquee class="bg-ink text-white" />
+
+  <!-- Servicios -->
+  <section class="bg-cream py-24 md:py-32">
+    <div class="container-site">
+      <div class="max-w-2xl">
+        <p class="eyebrow" data-reveal>Nuestros servicios</p>
+        <SplitText as="h2" text="Mira lo que tenemos *preparado para ti*" class="display-lg mt-5" accentClass="script text-brand-500 normal-case" />
+      </div>
+      <div class="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          services.map((s, i) => (
+            <div class="group relative overflow-hidden rounded-2xl bg-white p-8 shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl" data-reveal style={`--d:${i * 120}`}>
+              <span class="absolute inset-x-0 bottom-0 h-1 origin-left scale-x-0 bg-brand-500 transition-transform duration-500 group-hover:scale-x-100" aria-hidden="true" />
+              <span class="flex h-14 w-14 items-center justify-center rounded-2xl bg-brand-50 text-brand-500 transition-colors duration-500 group-hover:bg-brand-500 group-hover:text-white">
+                <Icon name={s.icon} class="h-7 w-7" />
+              </span>
+              <h3 class="mt-6 text-xl uppercase">{s.title}</h3>
+              <p class="mt-3 text-sm leading-relaxed text-muted">{s.text}</p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <BigCta image="/images/catalogo/catalogo-09.webp" />
+</Layout>

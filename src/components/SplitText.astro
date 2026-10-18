@@ -1,0 +1,36 @@
+---
+// Texto que aparece palabra a palabra al entrar en pantalla.
+// Las palabras entre *asteriscos* se pintan con la letra manuscrita de acento.
+interface Props {
+  text: string;
+  as?: 'h1' | 'h2' | 'h3' | 'p' | 'span';
+  class?: string;
+  accentClass?: string;
+  delay?: number;
+}
+const { text, as: Tag = 'h2', class: className, accentClass = 'script text-brand-400 normal-case', delay = 0 } = Astro.props;
+
+// El acento puede abarcar varias palabras: "*Dos Ambients*"
+let inAccent = false;
+const words = text.split(/\s+/).map((raw) => {
+  const opens = raw.startsWith('*') || raw.startsWith('¿*') || raw.startsWith('¡*');
+  if (opens) inAccent = true;
+  const accent = inAccent;
+  if (/\*[.,!?]*$/.test(raw) && !(opens && raw.replace(/^[¿¡]?\*/, '').indexOf('*') === -1)) inAccent = false;
+  return { word: raw.replace(/\*/g, ''), accent };
+});
+---
+
+<Tag class={className} data-split style={`--d:${delay}`} aria-label={text.replace(/\*/g, '')}>
+  {
+    words.map((w, i) => (
+      <>
+        <span class="split-word" aria-hidden="true">
+          <span style={`--i:${i}`} class={w.accent ? accentClass : undefined}>
+            {w.word}
+          </span>
+        </span>{' '}
+      </>
+    ))
+  }
+</Tag>

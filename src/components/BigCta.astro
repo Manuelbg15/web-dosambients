@@ -1,0 +1,39 @@
+---
+// Llamada a la acción final, a pantalla completa, con parallax.
+import Icon from './Icon.astro';
+import SocialIcon from './SocialIcon.astro';
+import SplitText from './SplitText.astro';
+import { site } from '../data/site';
+import { links } from '../data/links';
+
+interface Props {
+  image?: string;
+}
+const { image = '/images/catalogo/catalogo-23.webp' } = Astro.props;
+---
+
+<section class="grain relative isolate overflow-hidden bg-ink py-28 text-white md:py-40">
+  <div class="absolute inset-0 -z-10 overflow-hidden" aria-hidden="true">
+    <img src={image} alt="" class="h-full w-full scale-110 object-cover opacity-35" loading="lazy" data-parallax="0.12" />
+    <div class="absolute inset-0 bg-gradient-to-b from-ink via-ink/40 to-ink"></div>
+  </div>
+
+  <div class="container-site relative z-[2] text-center">
+    <p class="eyebrow justify-center !text-brand-300" data-reveal>Tu proyecto empieza aquí</p>
+    <SplitText as="h2" text="¿Hablamos de tu *nuevo* ambiente?" class="display-xl mx-auto mt-6 max-w-5xl" />
+    <p class="mx-auto mt-8 max-w-xl text-lg text-white/80" data-reveal style="--d:300">
+      Cuéntanos tu idea. Te asesoramos sin compromiso y te acompañamos hasta que todo quede como lo habías imaginado.
+    </p>
+    <div class="mt-12 flex flex-wrap justify-center gap-4" data-reveal style="--d:450">
+      <a href="/contacto/" class="btn btn-primary group !px-9 !py-4 text-base shadow-2xl shadow-brand-900/50">
+        Pide presupuesto <Icon name="arrow" class="h-4 w-4 transition-transform group-hover:translate-x-1" />
+      </a>
+      <a href={site.phoneHref} class="btn btn-outline !px-9 !py-4 text-base text-white hover:!text-ink">
+        <Icon name="phone" class="h-4 w-4" /> {site.phone}
+      </a>
+      <a href={links.whatsapp.url} target="_blank" rel="noopener" class="btn btn-outline !px-9 !py-4 text-base text-white hover:!text-ink">
+        <SocialIcon name="whatsapp" class="h-4 w-4" /> WhatsApp
+      </a>
+    </div>
+  </div>
+</section>

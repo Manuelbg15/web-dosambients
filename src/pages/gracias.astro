@@ -1,0 +1,15 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+---
+
+<Layout title="Mensaje enviado" noindex overlay={false}>
+  <section class="py-24">
+    <div class="container-site max-w-xl text-center">
+      <Icon name="check" class="mx-auto h-16 w-16 text-brand-500" />
+      <h1 class="mt-6 text-3xl uppercase">¡Gracias por tu mensaje!</h1>
+      <p class="mt-4 text-muted">Lo hemos recibido correctamente. Nos pondremos en contacto contigo lo antes posible.</p>
+      <a href="/" class="btn btn-primary mt-8">Volver al inicio</a>
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,42 @@
+---
+// Cinta de texto en movimiento continuo con los servicios.
+interface Props {
+  items?: string[];
+  class?: string;
+}
+const {
+  items = ['Cocinas', 'Baños', 'Armarios', 'Muebles a medida', 'Suelos', 'Carpintería', 'Reformas'],
+  class: className = 'bg-brand-500 text-white',
+} = Astro.props;
+const loop = [...items, ...items];
+---
+
+<div class:list={['relative overflow-hidden py-6 md:py-8', className]} aria-label={items.join(', ')}>
+  <div class="marquee-track flex w-max animate-marquee items-center" aria-hidden="true">
+    {
+      [0, 1].map(() => (
+        <div class="flex shrink-0 items-center">
+          {loop.map((item, i) => (
+            <span class="flex items-center">
+              <span class:list={['px-6 font-display text-3xl font-bold uppercase md:px-10 md:text-5xl', i % 2 === 1 && 'outline-white']}>
+                {item}
+              </span>
+              <span class="script text-2xl text-white/60 md:text-4xl">✦</span>
+            </span>
+          ))}
+        </div>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .outline-white {
+    color: transparent;
+    -webkit-text-stroke: 1.5px currentColor;
+    -webkit-text-stroke-color: white;
+  }
+  .marquee-track:hover {
+    animation-play-state: paused;
+  }
+</style>

@@ -1,0 +1,53 @@
+---
+// Formulario enviado a public/send-mail.php (hosting Hostalia).
+// El campo "website" es un honeypot antispam: debe quedar vacío.
+const field =
+  'mt-2 block w-full rounded-xl border border-transparent bg-cream px-5 py-4 text-ink transition-all duration-300 placeholder:text-muted/70 hover:bg-[#ececec] focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-100 focus:outline-none';
+---
+
+<form action="/send-mail.php" method="post" class="space-y-5" accept-charset="UTF-8">
+  <div class="grid gap-5 sm:grid-cols-2">
+    <label class="block text-xs font-semibold tracking-[0.15em] text-ink/70 uppercase">
+      Nombre *
+      <input type="text" name="nombre" required maxlength="100" autocomplete="name" class={field} />
+    </label>
+    <label class="block text-xs font-semibold tracking-[0.15em] text-ink/70 uppercase">
+      Teléfono
+      <input type="tel" name="telefono" maxlength="30" autocomplete="tel" class={field} />
+    </label>
+  </div>
+  <label class="block text-xs font-semibold tracking-[0.15em] text-ink/70 uppercase">
+    Email *
+    <input type="email" name="email" required maxlength="150" autocomplete="email" class={field} />
+  </label>
+  <label class="block text-xs font-semibold tracking-[0.15em] text-ink/70 uppercase">
+    Asunto
+    <input type="text" name="asunto" maxlength="150" class={field} />
+  </label>
+  <label class="block text-xs font-semibold tracking-[0.15em] text-ink/70 uppercase">
+    Mensaje *
+    <textarea name="mensaje" required rows="6" maxlength="5000" class={field}></textarea>
+  </label>
+
+  <!-- Antispam: campo oculto que los humanos no ven -->
+  <div class="hidden" aria-hidden="true">
+    <label>No rellenar este campo <input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+  </div>
+
+  <label class="flex items-start gap-3 text-sm text-muted">
+    <input type="checkbox" name="privacidad" value="1" required class="mt-1 h-4 w-4 accent-brand-500" />
+    <span>
+      He leído y acepto la <a href="/politica-privacidad/" class="text-brand-500 underline">política de privacidad</a>. *
+    </span>
+  </label>
+
+  <p class="text-xs text-muted">
+    Responsable: Dos Ambients. Finalidad: responder a tu consulta. No se cederán datos a terceros salvo obligación legal.
+    Puedes ejercer tus derechos escribiendo a info@dosambients.es.
+  </p>
+
+  <button type="submit" class="btn btn-primary group !px-9 !py-4 shadow-xl shadow-brand-500/30">
+    Enviar mensaje
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="h-4 w-4 transition-transform group-hover:translate-x-1" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"></path></svg>
+  </button>
+</form>

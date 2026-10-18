@@ -1,0 +1,467 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Icon from '../components/Icon.astro';
+import SplitText from '../components/SplitText.astro';
+import Marquee from '../components/Marquee.astro';
+import BigCta from '../components/BigCta.astro';
+import { designs } from '../data/gallery';
+import { ambientes, heroImages } from '../data/ambientes';
+import { site } from '../data/site';
+
+const rotatingWords = ['hogares', 'cocinas', 'baños', 'armarios'];
+const years = new Date().getFullYear() - site.foundedYear;
+
+const method = [
+  { n: '01', title: 'Asesoramos', text: 'Cuéntanos tu idea y nosotros te asesoraremos sobre cómo llevarla a cabo.' },
+  { n: '02', title: 'Calidad', text: 'Disponemos de los productos de las mejores marcas a un precio competitivo.' },
+  { n: '03', title: 'Proyectos', text: 'Nos encargaremos de que todo encaje y quede como tú lo habías pensado.' },
+];
+
+// Selección de trabajos reales para la cuadrícula de la portada
+const featured = ['c0', 'a1', 'b0', 'c3', 'a8', 'b3'].map((id) => designs.find((d) => d.id === id)!);
+const bento = [
+  'md:col-span-2 md:row-span-2',
+  'md:row-span-2',
+  '',
+  '',
+  '',
+  'md:col-span-3',
+];
+---
+
+<Layout>
+  <!-- ============ HERO ============ -->
+  <section class="hero grain relative isolate flex min-h-[100svh] items-end overflow-hidden bg-ink text-white" data-hero>
+    <div class="absolute inset-0 -z-10" aria-hidden="true">
+      {
+        heroImages.map((img, i) => (
+          <div class:list={['hero-slide absolute inset-0', i === 0 && 'is-active']}>
+            <img
+              src={img.src}
+              alt=""
+              class="h-full w-full object-cover"
+              fetchpriority={i === 0 ? 'high' : 'low'}
+              loading={i === 0 ? 'eager' : 'lazy'}
+            />
+          </div>
+        ))
+      }
+      <div class="absolute inset-0 bg-gradient-to-t from-ink via-ink/55 to-ink/30"></div>
+      <div class="absolute inset-0 bg-gradient-to-r from-ink/70 via-transparent to-transparent"></div>
+    </div>
+
+    <div class="container-site relative z-[2] pt-32 pb-28 md:pb-32">
+      <p class="eyebrow !text-white/80" data-reveal style="--d:100">Castellón de la Plana · desde {site.foundedYear}</p>
+
+      <h1 class="display-xl mt-6 max-w-5xl">
+        <SplitText as="span" text="Transformamos casas en" class="block" delay={250} />
+        <span class="rotator mt-1 block" aria-live="polite" data-reveal style="--d:700">
+          {
+            rotatingWords.map((w, i) => (
+              <span class:list={['rotator-word script text-brand-300', i === 0 && 'is-active']} aria-hidden={i === 0 ? 'false' : 'true'}>
+                {w}
+              </span>
+            ))
+          }
+        </span>
+      </h1>
+
+      <p class="mt-8 max-w-xl text-lg text-white/85 md:text-xl" data-reveal style="--d:900">
+        Cocinas, baños, armarios y muebles a medida. Diseñamos contigo cada detalle, desde la idea hasta la instalación.
+        <strong class="font-semibold text-white">Te haremos ilusionarte.</strong>
+      </p>
+
+      <div class="mt-10 flex flex-wrap gap-4" data-reveal style="--d:1050">
+        <a href="/contacto/" class="btn btn-primary group !px-8 !py-4 shadow-2xl shadow-brand-900/40">
+          Pide tu presupuesto
+          <Icon name="arrow" class="h-4 w-4 transition-transform group-hover:translate-x-1" />
+        </a>
+        <a href="/disenos/" class="btn btn-outline !px-8 !py-4 text-white hover:!text-ink">Ver trabajos</a>
+      </div>
+    </div>
+
+    <!-- Tarjeta flotante de financiación (dato de la web original) -->
+    <div class="absolute right-6 bottom-32 z-[2] hidden lg:block xl:right-16" data-reveal="right" style="--d:1300">
+      <div class="animate-float rounded-2xl border border-white/20 bg-white/10 p-6 shadow-2xl backdrop-blur-md">
+        <p class="font-display text-5xl leading-none font-bold">0<span class="text-3xl">%</span></p>
+        <p class="mt-1 text-xs font-semibold tracking-[0.25em] text-brand-200 uppercase">de interés</p>
+        <p class="mt-3 max-w-[12rem] text-sm text-white/85">¡Financiación hasta en <strong class="text-white">24 meses</strong>!</p>
+      </div>
+    </div>
+
+    <!-- Indicadores del hero -->
+    <div class="absolute inset-x-0 bottom-0 z-[2]">
+      <div class="container-site flex items-end justify-between pb-8">
+        <ol class="flex gap-4" aria-label="Ambientes">
+          {
+            heroImages.map((img, i) => (
+              <li>
+                <button type="button" data-hero-dot={i} class="hero-dot group block text-left" aria-label={`Ver ${img.label}`}>
+                  <span class="block h-[2px] w-10 overflow-hidden bg-white/25 sm:w-16">
+                    <span class="hero-dot-fill block h-full w-full origin-left scale-x-0 bg-white" />
+                  </span>
+                  <span class="mt-2 hidden text-[0.65rem] font-semibold tracking-[0.2em] text-white/60 uppercase transition-colors group-[.is-active]:text-white sm:block">
+                    {img.label}
+                  </span>
+                </button>
+              </li>
+            ))
+          }
+        </ol>
+        <a href="#bienvenida" class="hidden flex-col items-center gap-2 text-[0.65rem] font-semibold tracking-[0.3em] text-white/70 uppercase md:flex" aria-label="Bajar">
+          <span class="flex h-10 w-6 justify-center rounded-full border-2 border-white/50 pt-2">
+            <span class="animate-scroll-dot block h-2 w-1 rounded-full bg-white"></span>
+          </span>
+          Scroll
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <Marquee />
+
+  <!-- ============ BIENVENIDA ============ -->
+  <section id="bienvenida" class="overflow-hidden py-24 md:py-32">
+    <div class="container-site grid items-center gap-16 lg:grid-cols-2">
+      <div class="relative">
+        <div class="relative aspect-[4/5] overflow-hidden rounded-[2rem]" data-reveal="clip">
+          <img src="/images/disenos/c0.webp" alt="Cocina lacada clásica con encimera y frontal de Silestone, realizada por Dos Ambients" class="h-full w-full object-cover" loading="lazy" data-parallax="0.08" />
+        </div>
+        <div class="absolute -right-4 -bottom-10 w-1/2 overflow-hidden rounded-[1.5rem] border-8 border-white shadow-2xl md:-right-10" data-reveal="zoom" style="--d:300">
+          <img src="/images/disenos/thumb/b0.webp" alt="Baño a medida realizado por Dos Ambients" class="aspect-square w-full object-cover" loading="lazy" />
+        </div>
+        <div class="absolute -top-6 -left-4 flex h-32 w-32 flex-col items-center justify-center rounded-full bg-brand-500 text-center text-white shadow-xl md:-left-8 md:h-36 md:w-36" data-reveal="zoom" style="--d:500">
+          <span class="font-display text-4xl leading-none font-bold"><span data-count={years}>{years}</span></span>
+          <span class="mt-1 text-[0.65rem] font-semibold tracking-[0.2em] uppercase">años<br />contigo</span>
+        </div>
+      </div>
+
+      <div>
+        <p class="eyebrow" data-reveal>Sobre nosotros</p>
+        <SplitText as="h2" text="Bienvenidos a *Dos Ambients*" class="display-lg mt-5" accentClass="script text-brand-500 normal-case" />
+        <p class="mt-8 text-lg leading-relaxed text-muted" data-reveal style="--d:200">
+          Nacimos en Castellón en el año {site.foundedYear} y desde entonces estamos en la C/ Mª Rosa Molas, esquina Camino La Plana. Ofrecemos una amplia gama de productos para el baño, la cocina, los armarios, el suelo y la carpintería en general.
+        </p>
+        <p class="mt-4 leading-relaxed text-muted" data-reveal style="--d:300">
+          Somos especialistas en muebles a medida y trabajamos con los últimos materiales y los diseños más innovadores, con un servicio de calidad, ágil y eficaz desde el proyecto inicial hasta la instalación en tu casa.
+        </p>
+
+        <dl class="mt-12 grid grid-cols-3 gap-6 border-t border-line pt-10">
+          <div class="flex flex-col" data-reveal style="--d:350">
+            <dt class="text-xs font-semibold tracking-widest text-muted uppercase">Diseño personalizado</dt>
+            <dd class="order-first font-display text-4xl font-bold text-brand-500 md:text-5xl"><span data-count="100">100</span>%</dd>
+          </div>
+          <div class="flex flex-col" data-reveal style="--d:450">
+            <dt class="text-xs font-semibold tracking-widest text-muted uppercase">Meses de financiación</dt>
+            <dd class="order-first font-display text-4xl font-bold text-brand-500 md:text-5xl"><span data-count="24">24</span></dd>
+          </div>
+          <div class="flex flex-col" data-reveal style="--d:550">
+            <dt class="text-xs font-semibold tracking-widest text-muted uppercase">Desde el año</dt>
+            <dd class="order-first font-display text-4xl font-bold text-brand-500 md:text-5xl">{site.foundedYear}</dd>
+          </div>
+        </dl>
+
+        <a href="/quienes-somos/" class="group mt-10 inline-flex items-center gap-3 font-display font-semibold tracking-widest text-ink uppercase" data-reveal style="--d:600">
+          <span class="flex h-12 w-12 items-center justify-center rounded-full border border-ink/20 transition-all group-hover:border-brand-500 group-hover:bg-brand-500 group-hover:text-white">
+            <Icon name="arrow" class="h-4 w-4" />
+          </span>
+          Conócenos
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ELIGE TU AMBIENTE ============ -->
+  <section class="grain relative overflow-hidden bg-ink py-24 text-white md:py-32" data-ambientes>
+    <div class="container-site">
+      <div class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+        <div>
+          <p class="eyebrow !text-brand-300" data-reveal>Lo que hacemos</p>
+          <SplitText as="h2" text="Elige tu *ambiente*" class="display-lg mt-5" />
+        </div>
+        <p class="max-w-sm text-white/70" data-reveal style="--d:200">Pasa el cursor o toca cada ambiente y descubre cómo podemos transformar tu casa.</p>
+      </div>
+
+      <div class="mt-14 grid gap-10 lg:grid-cols-[1fr_1.25fr] lg:gap-16">
+        <ul class="divide-y divide-white/10 border-y border-white/10" role="tablist" aria-label="Ambientes">
+          {
+            ambientes.map((a, i) => (
+              <li data-reveal style={`--d:${i * 100}`}>
+                <button
+                  type="button"
+                  role="tab"
+                  id={`tab-${a.id}`}
+                  aria-controls={`panel-${a.id}`}
+                  aria-selected={i === 0 ? 'true' : 'false'}
+                  data-ambiente={i}
+                  class="ambiente-tab group flex w-full items-center gap-6 py-6 text-left"
+                >
+                  <span class="font-sans text-sm font-semibold text-white/40 transition-colors group-aria-selected:text-brand-300">0{i + 1}</span>
+                  <span class="font-display text-3xl font-bold tracking-tight text-white/40 uppercase transition-all duration-500 group-hover:text-white group-aria-selected:translate-x-2 group-aria-selected:text-white md:text-5xl">
+                    {a.title}
+                  </span>
+                  <span class="ml-auto flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/20 opacity-0 transition-all duration-500 group-aria-selected:border-brand-400 group-aria-selected:bg-brand-500 group-aria-selected:opacity-100">
+                    <Icon name="arrow" class="h-4 w-4" />
+                  </span>
+                </button>
+              </li>
+            ))
+          }
+        </ul>
+
+        <div class="relative aspect-[4/3] overflow-hidden rounded-[2rem] lg:aspect-auto lg:min-h-[520px]" data-reveal="clip" style="--d:200">
+          {
+            ambientes.map((a, i) => (
+              <div
+                id={`panel-${a.id}`}
+                role="tabpanel"
+                aria-labelledby={`tab-${a.id}`}
+                class:list={['ambiente-panel absolute inset-0', i === 0 && 'is-active']}
+              >
+                <img src={a.image} alt={a.alt} class="h-full w-full object-cover" loading="lazy" />
+                <div class="absolute inset-0 bg-gradient-to-t from-ink/90 via-ink/20 to-transparent" />
+                <div class="ambiente-copy absolute inset-x-0 bottom-0 p-8 md:p-10">
+                  <p class="script text-3xl text-brand-300 md:text-4xl">{a.title}</p>
+                  <p class="mt-3 max-w-md text-white/90">{a.text}</p>
+                  <a href={a.href} class="mt-5 inline-flex items-center gap-2 text-sm font-bold tracking-widest uppercase hover:text-brand-300">
+                    Ver más <Icon name="arrow" class="h-4 w-4" />
+                  </a>
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MÉTODO ============ -->
+  <section class="relative overflow-hidden py-24 md:py-32">
+    <div class="pointer-events-none absolute -top-10 right-0 font-display text-[22vw] leading-none font-bold text-cream select-none" aria-hidden="true">
+      método
+    </div>
+    <div class="container-site relative">
+      <div class="max-w-2xl">
+        <p class="eyebrow" data-reveal>Nuestro método</p>
+        <SplitText as="h2" text="Plasmamos lo que *has imaginado*" class="display-lg mt-5" accentClass="script text-brand-500 normal-case" />
+      </div>
+
+      <ol class="relative mt-20 grid gap-14 md:grid-cols-3 md:gap-10">
+        <span class="method-line absolute top-0 left-0 hidden h-px w-full origin-left bg-brand-200 md:block" data-reveal aria-hidden="true"></span>
+        {
+          method.map((m, i) => (
+            <li class="relative md:pt-12" data-reveal style={`--d:${200 + i * 200}`}>
+              <span class="absolute -top-1.5 left-0 hidden h-3 w-3 rounded-full bg-brand-500 ring-8 ring-white md:block" aria-hidden="true" />
+              <span class="outline-num block text-8xl leading-none">{m.n}</span>
+              <h3 class="mt-8 text-2xl uppercase">{m.title}</h3>
+              <p class="mt-3 max-w-xs leading-relaxed text-muted">{m.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============ TRABAJOS ============ -->
+  <section class="bg-cream py-24 md:py-32">
+    <div class="container-site">
+      <div class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
+        <div>
+          <p class="eyebrow" data-reveal>Nuestros diseños</p>
+          <SplitText as="h2" text="Trabajos *reales*, hogares reales" class="display-lg mt-5" accentClass="script text-brand-500 normal-case" />
+        </div>
+        <a href="/disenos/" class="btn btn-primary group self-start md:self-auto" data-reveal>
+          Ver todos <Icon name="arrow" class="h-4 w-4 transition-transform group-hover:translate-x-1" />
+        </a>
+      </div>
+
+      <ul class="mt-14 grid auto-rows-[220px] grid-cols-2 gap-4 md:auto-rows-[240px] md:grid-cols-4">
+        {
+          featured.map((d, i) => (
+            <li class:list={['group relative overflow-hidden rounded-2xl', bento[i]]} data-reveal="zoom" style={`--d:${i * 90}`}>
+              <a href="/disenos/" class="block h-full">
+                <img
+                  src={i === 0 ? d.src : d.thumb}
+                  alt={d.alt}
+                  loading="lazy"
+                  class="h-full w-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-110"
+                />
+                <span class="absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-transparent opacity-60 transition-opacity duration-500 group-hover:opacity-100" />
+                <span class="absolute bottom-0 left-0 translate-y-2 p-5 text-white transition-transform duration-500 group-hover:translate-y-0">
+                  <span class="line-clamp-1 block text-[0.65rem] font-semibold tracking-[0.25em] text-brand-200 uppercase">{d.text}</span>
+                  <span class="mt-1 block font-display text-xl font-bold uppercase">{d.title}</span>
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <BigCta />
+</Layout>
+
+<style>
+  /* Fundido con Ken Burns entre las fotos del hero */
+  .hero-slide {
+    opacity: 0;
+    transition: opacity 1.6s ease;
+  }
+  .hero-slide.is-active {
+    opacity: 1;
+  }
+  .hero-slide.is-active img {
+    animation: var(--animate-kenburns);
+    animation-duration: 9s;
+  }
+  .hero-dot.is-active .hero-dot-fill {
+    animation: dot-fill 7s linear forwards;
+  }
+  @keyframes dot-fill {
+    to {
+      transform: scaleX(1);
+    }
+  }
+
+  /* Palabra que va rotando */
+  .rotator {
+    display: grid;
+  }
+  .rotator-word {
+    grid-area: 1 / 1;
+    font-size: 1.15em;
+    line-height: 1.15;
+    opacity: 0;
+    transform: translateY(45%) rotate(4deg);
+    filter: blur(8px);
+    transition:
+      opacity 0.7s ease,
+      transform 0.9s var(--ease-out-expo),
+      filter 0.7s ease;
+  }
+  .rotator-word.is-active {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+  .rotator-word.is-leaving {
+    opacity: 0;
+    transform: translateY(-45%) rotate(-4deg);
+    filter: blur(8px);
+  }
+
+  /* Selector de ambientes */
+  .ambiente-panel {
+    clip-path: inset(0 0 0 100%);
+    transition: clip-path 1s var(--ease-out-expo);
+  }
+  .ambiente-panel img {
+    transform: scale(1.15);
+    transition: transform 1.6s var(--ease-out-expo);
+  }
+  .ambiente-panel.is-active {
+    clip-path: inset(0 0 0 0);
+    z-index: 1;
+  }
+  .ambiente-panel.is-active img {
+    transform: scale(1);
+  }
+  .ambiente-copy {
+    opacity: 0;
+    transform: translateY(20px);
+    transition:
+      opacity 0.6s,
+      transform 0.8s var(--ease-out-expo);
+  }
+  .ambiente-panel.is-active .ambiente-copy {
+    opacity: 1;
+    transform: none;
+    transition-delay: 0.35s;
+  }
+
+  .method-line {
+    transform: scaleX(0);
+    opacity: 1;
+    transition: transform 1.8s var(--ease-out-expo);
+  }
+  .method-line.is-visible {
+    transform: scaleX(1);
+  }
+</style>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const timers: number[] = [];
+    const clearAll = () => timers.forEach((t) => window.clearInterval(t));
+    document.addEventListener('astro:before-swap', clearAll, { once: true });
+
+    // --- Hero: fotos con fundido ---
+    const hero = document.querySelector<HTMLElement>('[data-hero]');
+    if (hero) {
+      const slides = [...hero.querySelectorAll<HTMLElement>('.hero-slide')];
+      const dots = [...hero.querySelectorAll<HTMLButtonElement>('[data-hero-dot]')];
+      let current = 0;
+      let timer = 0;
+      const go = (i: number) => {
+        current = (i + slides.length) % slides.length;
+        slides.forEach((s, k) => s.classList.toggle('is-active', k === current));
+        dots.forEach((d, k) => {
+          d.classList.remove('is-active');
+          if (k === current) {
+            void d.offsetWidth; // reinicia la animación de la barra
+            d.classList.add('is-active');
+          }
+        });
+      };
+      const start = () => {
+        if (reduce) return;
+        window.clearInterval(timer);
+        timer = window.setInterval(() => go(current + 1), 7000);
+        timers.push(timer);
+      };
+      dots.forEach((d, k) => d.addEventListener('click', () => { go(k); start(); }));
+      go(0);
+      start();
+
+      // --- Palabra rotatoria ---
+      const words = [...hero.querySelectorAll<HTMLElement>('.rotator-word')];
+      let w = 0;
+      if (!reduce && words.length > 1) {
+        timers.push(
+          window.setInterval(() => {
+            const prev = words[w];
+            w = (w + 1) % words.length;
+            prev.classList.remove('is-active');
+            prev.classList.add('is-leaving');
+            prev.setAttribute('aria-hidden', 'true');
+            setTimeout(() => prev.classList.remove('is-leaving'), 900);
+            words[w].classList.add('is-active');
+            words[w].setAttribute('aria-hidden', 'false');
+          }, 2600),
+        );
+      }
+    }
+
+    // --- Selector de ambientes ---
+    const amb = document.querySelector<HTMLElement>('[data-ambientes]');
+    if (amb) {
+      const tabs = [...amb.querySelectorAll<HTMLButtonElement>('[data-ambiente]')];
+      const panels = [...amb.querySelectorAll<HTMLElement>('.ambiente-panel')];
+      const select = (i: number) => {
+        tabs.forEach((t, k) => t.setAttribute('aria-selected', String(k === i)));
+        panels.forEach((p, k) => p.classList.toggle('is-active', k === i));
+      };
+      tabs.forEach((t, i) => {
+        t.addEventListener('click', () => select(i));
+        t.addEventListener('mouseenter', () => select(i));
+        t.addEventListener('focus', () => select(i));
+        t.addEventListener('keydown', (e) => {
+          if (e.key === 'ArrowDown' || e.key === 'ArrowRight') { e.preventDefault(); tabs[(i + 1) % tabs.length].focus(); }
+          if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') { e.preventDefault(); tabs[(i - 1 + tabs.length) % tabs.length].focus(); }
+        });
+      });
+    }
+  });
+</script>

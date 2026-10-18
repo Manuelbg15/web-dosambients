@@ -1,0 +1,50 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import PageHero from '../../components/PageHero.astro';
+import Icon from '../../components/Icon.astro';
+import SocialIcon from '../../components/SocialIcon.astro';
+import { getNews, formatDate } from '../../data/news';
+import { links } from '../../data/links';
+
+const news = await getNews();
+---
+
+<Layout title="Actualidad" description="Novedades y noticias de Dos Ambients, cocinas, baños y armarios a medida en Castellón.">
+  <PageHero title="*Actualidad*" eyebrow="Novedades" subtitle="Lo último de Dos Ambients." compact />
+
+  <section class="py-16">
+    <div class="container-site">
+      {
+        news.length === 0 ? (
+          <div class="mx-auto max-w-xl rounded-xl bg-cream p-10 text-center">
+            <Icon name="doc" class="mx-auto h-10 w-10 text-brand-500" />
+            <h2 class="mt-4 text-2xl uppercase">Próximamente</h2>
+            <p class="mt-3 text-muted">Muy pronto publicaremos aquí nuestras novedades. Mientras tanto, síguenos en Facebook.</p>
+            <a href={links.facebook.url} target="_blank" rel="noopener" class="btn btn-primary mt-6">
+              <SocialIcon name="facebook" class="h-4 w-4" /> Síguenos en Facebook
+            </a>
+          </div>
+        ) : (
+          <ul class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {news.map((n) => (
+              <li class="overflow-hidden rounded-xl border border-line transition-shadow hover:shadow-lg">
+                <a href={`/actualidad/${n.id}/`} class="block h-full">
+                  {n.data.image && (
+                    <img src={n.data.image} alt={n.data.imageAlt ?? ''} loading="lazy" class="aspect-[16/10] w-full object-cover" />
+                  )}
+                  <div class="p-6">
+                    <time datetime={n.data.date.toISOString()} class="text-sm text-brand-500">
+                      {formatDate(n.data.date)}
+                    </time>
+                    <h2 class="mt-2 text-xl">{n.data.title}</h2>
+                    <p class="mt-2 text-muted">{n.data.description}</p>
+                  </div>
+                </a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+  </section>
+</Layout>

@@ -1,0 +1,15 @@
+---
+// Datos del titular para las páginas legales. Los que faltan se marcan como TODO.
+import { site } from '../data/site';
+const { legal, address } = site;
+const todo = (v: string, label: string) => v || `TODO: ${label}`;
+---
+
+<ul>
+  <li><strong>Titular:</strong> <span class:list={[!legal.companyName && 'todo']}>{todo(legal.companyName, 'razón social')}</span> (nombre comercial: {site.name})</li>
+  <li><strong>CIF/NIF:</strong> <span class:list={[!legal.cif && 'todo']}>{todo(legal.cif, 'CIF')}</span></li>
+  <li><strong>Domicilio:</strong> {address.street}, {address.postalCode} {address.city} ({address.province})</li>
+  <li><strong>Teléfono:</strong> {site.phone}</li>
+  <li><strong>Email:</strong> <a href={`mailto:${site.email}`}>{site.email}</a></li>
+  <li><strong>Datos registrales:</strong> <span class:list={[!legal.registry && 'todo']}>{todo(legal.registry, 'inscripción en el Registro Mercantil, si procede')}</span></li>
+</ul>

@@ -1,0 +1,21 @@
+---
+import Layout from './Layout.astro';
+import PageHero from '../components/PageHero.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  updated: string;
+}
+const { title, description, updated } = Astro.props;
+---
+
+<Layout title={title} description={description}>
+  <PageHero title={title} eyebrow="Información legal" compact />
+  <article class="container-site max-w-3xl py-16">
+    <p class="text-sm text-muted">Última actualización: {updated}</p>
+    <div class="prose-site mt-6">
+      <slot />
+    </div>
+  </article>
+</Layout>

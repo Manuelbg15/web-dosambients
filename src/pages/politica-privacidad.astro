@@ -1,0 +1,67 @@
+---
+import LegalLayout from '../layouts/LegalLayout.astro';
+import LegalHolder from '../components/LegalHolder.astro';
+import { site } from '../data/site';
+---
+
+<LegalLayout
+  title="Política de privacidad"
+  description="Política de privacidad y protección de datos de Dos Ambients."
+  updated="16 de octubre de 2026"
+>
+  <p>
+    Conforme al Reglamento (UE) 2016/679 (RGPD) y a la Ley Orgánica 3/2018 (LOPDGDD), te informamos sobre el
+    tratamiento de los datos personales que nos facilites a través de este sitio web.
+  </p>
+
+  <h2>1. Responsable del tratamiento</h2>
+  <LegalHolder />
+
+  <h2>2. Datos que tratamos y finalidad</h2>
+  <ul>
+    <li>
+      <strong>Formulario de contacto:</strong> nombre, email, teléfono (opcional) y el contenido del mensaje. Los usamos
+      para responder a tu consulta o preparar el presupuesto que nos pidas.
+    </li>
+    <li>
+      <strong>Email, teléfono y WhatsApp:</strong> los datos que nos facilites al contactarnos, con la misma finalidad.
+    </li>
+  </ul>
+  <p>No tomamos decisiones automatizadas ni elaboramos perfiles con tus datos.</p>
+
+  <h2>3. Base legal</h2>
+  <p>
+    El consentimiento que nos das al enviar el formulario o contactarnos (art. 6.1.a RGPD) y, en su caso, la aplicación
+    de medidas precontractuales a petición tuya (art. 6.1.b RGPD).
+  </p>
+
+  <h2>4. Conservación</h2>
+  <p>
+    Conservaremos los datos el tiempo necesario para atender tu solicitud y, después, durante los plazos legalmente
+    exigibles. Si llegas a ser cliente, los plazos de conservación serán los establecidos por la normativa fiscal y mercantil.
+  </p>
+
+  <h2>5. Destinatarios</h2>
+  <p>
+    No cedemos tus datos a terceros salvo obligación legal. Pueden acceder a ellos los proveedores que nos prestan
+    servicios técnicos (como el alojamiento web y el correo electrónico), con los que tenemos firmados los acuerdos de
+    encargo de tratamiento correspondientes.
+  </p>
+
+  <h2>6. Tus derechos</h2>
+  <p>
+    Puedes ejercer tus derechos de acceso, rectificación, supresión, oposición, limitación del tratamiento y
+    portabilidad, así como retirar tu consentimiento, escribiendo a <a href={`mailto:${site.email}`}>{site.email}</a>
+    o por correo postal a {site.address.street}, {site.address.postalCode} {site.address.city}.
+  </p>
+  <p>
+    Si consideras que no hemos tratado tus datos correctamente, puedes presentar una reclamación ante la Agencia
+    Española de Protección de Datos (<a href="https://www.aepd.es" target="_blank" rel="noopener">www.aepd.es</a>).
+  </p>
+
+  <h2>7. Seguridad</h2>
+  <p>
+    Aplicamos las medidas técnicas y organizativas adecuadas para proteger tus datos frente a pérdida, uso indebido o
+    acceso no autorizado.
+  </p>
+</LegalLayout>

@@ -1,0 +1,21 @@
+---
+import Layout from '../layouts/Layout.astro';
+import PageHero from '../components/PageHero.astro';
+import Gallery from '../components/Gallery.astro';
+import BigCta from '../components/BigCta.astro';
+import { designs, categories } from '../data/gallery';
+---
+
+<Layout
+  title="Nuestros diseños"
+  description="Una muestra de los trabajos de Dos Ambients: cocinas, baños y armarios diseñados a medida en Castellón."
+  image="/images/disenos/c0.webp"
+>
+  <PageHero title="Nuestros *diseños*" eyebrow="Trabajos reales" subtitle="Una pequeña muestra de nuestros trabajos: cocinas, baños y armarios diseñados a medida." image="/images/disenos/c0.webp" />
+  <section class="py-20 md:py-28">
+    <div class="container-site">
+      <Gallery items={designs} filters={categories} />
+    </div>
+  </section>
+  <BigCta />
+</Layout>

@@ -1,0 +1,50 @@
+---
+// Cabecera de página interior: imagen a sangre con Ken Burns, título animado y migas de pan.
+import SplitText from './SplitText.astro';
+
+interface Props {
+  title: string;
+  subtitle?: string;
+  image?: string;
+  eyebrow?: string;
+  crumbs?: { label: string; href?: string }[];
+  compact?: boolean;
+  /** Deja espacio abajo para un bloque que se superpone a la cabecera */
+  overlap?: boolean;
+}
+const { title, subtitle, image = '/images/hero/hero-2.webp', eyebrow, crumbs = [], compact = false, overlap = false } = Astro.props;
+const trail = crumbs.length ? crumbs : [{ label: title.replace(/\*/g, '') }];
+---
+
+<section class:list={['page-hero grain relative isolate flex items-end overflow-hidden bg-ink text-white', compact ? 'min-h-[46svh]' : 'min-h-[62svh]']}>
+  <div class="absolute inset-0 -z-10" aria-hidden="true">
+    <img src={image} alt="" class="hero-img h-full w-full object-cover" fetchpriority="high" />
+    <div class="absolute inset-0 bg-gradient-to-t from-ink via-ink/60 to-ink/35"></div>
+  </div>
+
+  <div class:list={['container-site relative z-[2] pt-36', overlap ? 'pb-28 md:pb-40' : 'pb-14 md:pb-20']}>
+    <nav aria-label="Migas de pan" class="text-xs font-semibold tracking-[0.2em] text-white/60 uppercase" data-reveal>
+      <ol class="flex flex-wrap gap-2">
+        <li><a href="/" class="hover:text-white">Inicio</a></li>
+        {
+          trail.map((c) => (
+            <li class="flex gap-2">
+              <span aria-hidden="true" class="text-brand-300">/</span>
+              {c.href ? <a href={c.href} class="hover:text-white">{c.label}</a> : <span aria-current="page" class="text-white/90">{c.label}</span>}
+            </li>
+          ))
+        }
+      </ol>
+    </nav>
+    {eyebrow && <p class="eyebrow mt-8 !text-brand-300" data-reveal style="--d:100">{eyebrow}</p>}
+    <SplitText as="h1" text={title} class="display-xl mt-5 max-w-5xl" delay={150} />
+    {subtitle && <p class="mt-6 max-w-2xl text-lg text-white/80 md:text-xl" data-reveal style="--d:500">{subtitle}</p>}
+  </div>
+</section>
+
+<style>
+  .hero-img {
+    animation: var(--animate-kenburns);
+    animation-duration: 12s;
+  }
+</style>
