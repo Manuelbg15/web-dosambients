@@ -56,12 +56,15 @@ Web de **Dos Ambients** (cocinas, baños, armarios y muebles a medida, Castelló
 - Los originales sin procesar van en `material/` (ignorado por git). Script de conversión: `material/scripts/process-images.mjs` (usa `sharp`).
 
 ## Despliegue
-- `.github/workflows/deploy.yml`: build + subida por FTP con `lftp` (mirror de `dist/`).
-- Secrets: `FTP_SERVER`, `FTP_USERNAME`, `FTP_PASSWORD`, `FTP_REMOTE_DIR`.
-- Se lanza con push a `main` o manualmente (`workflow_dispatch`). **No hacer commit/push ni lanzar el workflow sin permiso explícito.**
+- `.github/workflows/deploy.yml` (mismo esquema que el resto de webs, p. ej. `espanyolfutsal-web`): en cada push a `main` (o a mano con `workflow_dispatch`) hace `npm ci` + `npm run build` y sube `dist/` por FTP con `lftp mirror -R --delete`.
+- Repositorio: https://github.com/Manuelbg15/web-dosambients (público: nunca subir contraseñas ni datos privados).
+- Secrets del repo: `FTP_SERVER`, `FTP_USERNAME`, `FTP_PASSWORD` (los mismos de la suscripción de Hostalia que usan las otras webs) y `FTP_REMOTE_DIR` = `/dosambients.es` (la carpeta del dominio en Plesk, **no** `httpdocs`, que es de otra web).
+- `--delete` excluye `.user.ini` (PHP del hosting) y `.well-known/` (certificado SSL): no quitar esas exclusiones.
+- **No hacer commit/push ni lanzar el workflow sin permiso explícito**: cada push a `main` publica la web.
+- Hosting: Hostalia (Plesk), IP 82.194.68.115. SSL: certificado DigiCert de Hostalia (se renueva solo).
 - `public/.htaccess`: fuerza HTTPS + www, 404 personalizada y redirecciones 301 desde las URLs `.php` de la web antigua.
 
 ## Contenido
 - **No inventar datos.** Si falta algo, dejar un `TODO` visible en el código (y, si se muestra, con la clase `todo`) y avisar.
-- Datos legales pendientes (razón social, CIF, registro) se rellenan en `src/data/site.ts` → `legal`.
+- Datos legales de la empresa en `src/data/site.ts` → `legal`. El horario de apertura no se publica (`openingHours` vacío).
 - Cookies: la web no instala cookies propias; el mapa de Google se carga solo tras clic. Si se añade analítica, hará falta banner de consentimiento y actualizar `politica-cookies`.

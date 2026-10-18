@@ -20,13 +20,12 @@ export const site = {
   },
   geo: { lat: 39.994127, lng: -0.0335108 },
   foundedYear: 2000,
-  // TODO: razón social, CIF y datos registrales (no aparecen en la web original).
   legal: {
-    companyName: '',
-    cif: '',
-    registry: '',
+    companyName: 'JLD Dos Ambients SL',
+    cif: 'B12536959',
+    registry: 'Calle MªRosa Molas 15, Castellón de la Plana, 12004',
   },
-  // TODO: horario de apertura (no aparece en la web original).
+  // Horario de apertura: no se publica (vacío = no se muestra en Contacto).
   openingHours: '',
 };
 
