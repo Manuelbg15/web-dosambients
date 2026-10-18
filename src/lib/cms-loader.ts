@@ -35,7 +35,18 @@ const slugify = (s: string) =>
     .replace(/^-+|-+$/g, '')
     .slice(0, 80);
 
-const stripHtml = (html: string) => html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+// Texto plano a partir del HTML (para el resumen): quita etiquetas y decodifica entidades como &nbsp;
+const decodeEntities = (s: string) =>
+  s
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;|&apos;/g, "'")
+    .replace(/&#(\d+);/g, (_, n) => String.fromCharCode(Number(n)))
+    .replace(/&([a-z]+);/gi, (m, name) => ({ aacute: 'á', eacute: 'é', iacute: 'í', oacute: 'ó', uacute: 'ú', ntilde: 'ñ', Aacute: 'Á', Eacute: 'É', Iacute: 'Í', Oacute: 'Ó', Uacute: 'Ú', Ntilde: 'Ñ', uuml: 'ü', iexcl: '¡', iquest: '¿', laquo: '«', raquo: '»', ordf: 'ª', ordm: 'º', euro: '€', hellip: '…', mdash: '—', ndash: '–' })[name as string] ?? m);
+const stripHtml = (html: string) => decodeEntities(html.replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' ').trim();
 
 const escapeHtml = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
@@ -101,14 +112,16 @@ export function cmsLoader(): Loader {
         const title = String(pick(item, 'titulo', 'title', 'nombre', 'name') ?? '').trim();
         if (!title) continue;
 
+        // El CMS devuelve status: "PUBLISHED"; si viene otro estado (borrador, programada…) no se publica.
         const published = pick(item, 'publicado', 'published', 'activo', 'active');
-        const status = String(pick(item, 'estado', 'status') ?? '').toLowerCase();
-        if (published === false || published === 0 || ['borrador', 'draft', 'oculto', 'hidden'].includes(status)) continue;
+        const status = String(pick(item, 'status', 'estado') ?? '').toLowerCase();
+        if (published === false || published === 0) continue;
+        if (status && !['published', 'publicado', 'publicada', 'activo', 'active'].includes(status)) continue;
 
         const content = String(pick(item, 'contenido', 'content', 'cuerpo', 'body', 'texto', 'html') ?? '');
         const html = sanitize(toHtml(content));
         const summary = pick(item, 'resumen', 'descripcion', 'description', 'extracto', 'excerpt', 'entradilla');
-        const description = String(summary ?? stripHtml(html)).slice(0, 220);
+        const description = stripHtml(String(summary ?? html)).slice(0, 220);
         const dateRaw = pick(item, 'fecha', 'fecha_publicacion', 'date', 'published_at', 'publishedAt', 'created_at', 'createdAt');
         const imageRaw = pick(item, 'imagen', 'imagen_url', 'image', 'image_url', 'imageUrl', 'portada', 'thumbnail', 'foto', 'imagen.url', 'image.url');
 
