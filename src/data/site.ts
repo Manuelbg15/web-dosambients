@@ -23,7 +23,9 @@ export const site = {
   legal: {
     companyName: 'JLD Dos Ambients SL',
     cif: 'B12536959',
-    registry: 'Calle MªRosa Molas 15, Castellón de la Plana, 12004',
+    registeredOffice: 'Calle María Rosa Molas, 15, 12004 Castellón de la Plana (España)',
+    // Inscripción en el Registro Mercantil (Tomo, Folio, Hoja). Vacío = no se muestra.
+    registry: '',
   },
   // Horario de apertura: no se publica (vacío = no se muestra en Contacto).
   openingHours: '',
