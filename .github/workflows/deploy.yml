@@ -5,6 +5,8 @@ on:
     branches:
       - main
   workflow_dispatch:
+  # El CMS (cms.dragonrcnc.com) lanza el despliegue al publicar una noticia
+  repository_dispatch:
 
 concurrency:
   group: deploy
@@ -29,6 +31,9 @@ jobs:
 
       - name: 🛠️ Build Project
         run: npm run build
+        env:
+          # Las noticias del CMS se descargan en el build (secret del repositorio)
+          CMS_API_KEY: ${{ secrets.CMS_API_KEY }}
 
       # Sincroniza dist/ con la carpeta del dominio en Hostalia (FTP_REMOTE_DIR = /dosambients.es).
       # --delete borra en el servidor lo que ya no existe en dist/, salvo los archivos del hosting

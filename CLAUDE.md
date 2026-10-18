@@ -22,7 +22,10 @@ Web de **Dos Ambients** (cocinas, baños, armarios y muebles a medida, Castelló
 - `src/data/links.ts` — **todos los enlaces externos**. Los pendientes llevan `pending: true` + TODO y no se muestran hasta completarlos.
 - `src/data/gallery.ts` — fotos de "Nuestros diseños" (con categoría) y del catálogo.
 - `src/data/services.ts`, `src/data/ambientes.ts` (selector "Elige tu ambiente" e imágenes del hero), `src/data/news.ts`.
-- `src/content.config.ts` + `src/content/actualitat/*.md` — **noticias** (colección de contenido). Frontmatter: `title`, `description`, `date`, `image?`, `imageAlt?`, `draft`. El nombre del archivo es el slug (`/actualidad/<archivo>/`). `draft: true` no se publica.
+- `src/content.config.ts` — **noticias**, dos colecciones con el mismo esquema que se unen en `src/data/news.ts` (`getNews()`):
+  - `actualitat`: Markdown en `src/content/actualitat/*.md`. Frontmatter: `title`, `description`, `date`, `image?`, `imageAlt?`, `draft`. El nombre del archivo es el slug (`/actualidad/<archivo>/`). `draft: true` no se publica. Si un slug coincide con uno del CMS, manda el Markdown.
+  - `cms`: noticias del CMS propio (`https://cms.dragonrcnc.com/api/noticias`, cabeceras `X-API-KEY` + `Origin: dosambients.es`), descargadas **en el build** por `src/lib/cms-loader.ts`. La API Key va en `CMS_API_KEY` (`.env` en local, secret en GitHub): **nunca en el código** (el repo es público). Si falta la clave o el CMS falla, el build sigue sin esas noticias. El aviso "collection cms … is empty" del build es normal cuando no hay noticias.
+  - Al publicar en el CMS, este lanza el workflow (`repository_dispatch`) y la web se reconstruye con la noticia nueva.
 - `src/pages/` — `index`, `quienes-somos`, `disenos`, `catalogo`, `actualidad/`, `contacto`, `gracias`, `aviso-legal`, `politica-privacidad`, `politica-cookies`, `404`, `sitemap.xml.ts`.
 
 ## Diseño
@@ -56,9 +59,9 @@ Web de **Dos Ambients** (cocinas, baños, armarios y muebles a medida, Castelló
 - Los originales sin procesar van en `material/` (ignorado por git). Script de conversión: `material/scripts/process-images.mjs` (usa `sharp`).
 
 ## Despliegue
-- `.github/workflows/deploy.yml` (mismo esquema que el resto de webs, p. ej. `espanyolfutsal-web`): en cada push a `main` (o a mano con `workflow_dispatch`) hace `npm ci` + `npm run build` y sube `dist/` por FTP con `lftp mirror -R --delete`.
+- `.github/workflows/deploy.yml` (mismo esquema que el resto de webs, p. ej. `espanyolfutsal-web`): en cada push a `main`, al publicar en el CMS (`repository_dispatch`) o a mano (`workflow_dispatch`) hace `npm ci` + `npm run build` y sube `dist/` por FTP con `lftp mirror -R --delete`.
 - Repositorio: https://github.com/Manuelbg15/web-dosambients (público: nunca subir contraseñas ni datos privados).
-- Secrets del repo: `FTP_SERVER`, `FTP_USERNAME`, `FTP_PASSWORD` (los mismos de la suscripción de Hostalia que usan las otras webs) y `FTP_REMOTE_DIR` = `/dosambients.es` (la carpeta del dominio en Plesk, **no** `httpdocs`, que es de otra web).
+- Secrets del repo: `CMS_API_KEY` (noticias del CMS), `FTP_SERVER`, `FTP_USERNAME`, `FTP_PASSWORD` (los mismos de la suscripción de Hostalia que usan las otras webs) y `FTP_REMOTE_DIR` = `/dosambients.es` (la carpeta del dominio en Plesk, **no** `httpdocs`, que es de otra web).
 - `--delete` excluye `.user.ini` (PHP del hosting) y `.well-known/` (certificado SSL): no quitar esas exclusiones.
 - **No hacer commit/push ni lanzar el workflow sin permiso explícito**: cada push a `main` publica la web.
 - Hosting: Hostalia (Plesk), IP 82.194.68.115. SSL: certificado DigiCert de Hostalia (se renueva solo).
