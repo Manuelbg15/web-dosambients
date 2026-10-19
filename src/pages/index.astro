@@ -18,7 +18,7 @@ const method = [
 ];
 
 // Selección de trabajos reales para la cuadrícula de la portada
-const featured = ['c0', 'a1', 'b0', 'c3', 'a8', 'b3'].map((id) => designs.find((d) => d.id === id)!);
+const featured = ['cocina-01', 'bano-01', 'armario-01', 'cocina-03', 'bano-03', 'cocina-10'].map((id) => designs.find((d) => d.id === id)!);
 const bento = [
   'md:col-span-2 md:row-span-2',
   'md:row-span-2',
@@ -125,10 +125,10 @@ const bento = [
     <div class="container-site grid items-center gap-16 lg:grid-cols-2">
       <div class="relative">
         <div class="relative aspect-[4/5] overflow-hidden rounded-[2rem]" data-reveal="clip">
-          <img src="/images/disenos/c0.webp" alt="Cocina lacada clásica con encimera y frontal de Silestone, realizada por Dos Ambients" class="h-full w-full object-cover" loading="lazy" data-parallax="0.08" />
+          <img src="/images/disenos/cocina-02.webp" alt="Cocina en madera con isla y lámparas colgantes, trabajo de Dos Ambients" class="h-full w-full object-cover" loading="lazy" data-parallax="0.08" />
         </div>
         <div class="absolute -right-4 -bottom-10 w-1/2 overflow-hidden rounded-[1.5rem] border-8 border-white shadow-2xl md:-right-10" data-reveal="zoom" style="--d:300">
-          <img src="/images/disenos/thumb/b0.webp" alt="Baño a medida realizado por Dos Ambients" class="aspect-square w-full object-cover" loading="lazy" />
+          <img src="/images/disenos/thumb/bano-01.webp" alt="Baño con mueble suspendido granate y espejo retroiluminado, trabajo de Dos Ambients" class="aspect-square w-full object-cover" loading="lazy" />
         </div>
         <div class="absolute -top-6 -left-4 flex h-32 w-32 flex-col items-center justify-center rounded-full bg-brand-500 text-center text-white shadow-xl md:-left-8 md:h-36 md:w-36" data-reveal="zoom" style="--d:500">
           <span class="font-display text-4xl leading-none font-bold"><span data-count={years}>{years}</span></span>
@@ -449,6 +449,16 @@ const bento = [
     if (amb) {
       const tabs = [...amb.querySelectorAll<HTMLButtonElement>('[data-ambiente]')];
       const panels = [...amb.querySelectorAll<HTMLElement>('.ambiente-panel')];
+      // Precarga las fotos de los paneles ocultos al acercarse a la sección (si no, se ve un instante en negro)
+      const preload = new IntersectionObserver(
+        (entries) => {
+          if (!entries.some((e) => e.isIntersecting)) return;
+          panels.forEach((p) => p.querySelector('img')?.setAttribute('loading', 'eager'));
+          preload.disconnect();
+        },
+        { rootMargin: '800px 0px' },
+      );
+      preload.observe(amb);
       const select = (i: number) => {
         tabs.forEach((t, k) => t.setAttribute('aria-selected', String(k === i)));
         panels.forEach((p, k) => p.classList.toggle('is-active', k === i));

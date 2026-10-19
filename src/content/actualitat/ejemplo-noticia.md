@@ -2,8 +2,8 @@
 title: "Ejemplo de noticia"
 description: "Plantilla de noticia. Copia este archivo, cambia el nombre y el contenido, y pon draft: false para publicarla."
 date: 2026-10-16
-image: /images/disenos/c0.webp
-imageAlt: "Cocina lacada clásica realizada por Dos Ambients"
+image: /images/disenos/cocina-03.webp
+imageAlt: "Cocina con isla, trabajo de Dos Ambients"
 draft: true
 ---
 

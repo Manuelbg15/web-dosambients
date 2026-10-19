@@ -10,6 +10,8 @@ interface Item {
   title?: string;
   text?: string;
   category?: string;
+  /** Si existe, el elemento es un vídeo (el thumb se usa como portada) */
+  video?: string;
 }
 interface Props {
   items: Item[];
@@ -42,15 +44,36 @@ const shown = limit ? items.slice(0, limit) : items;
             href={item.src}
             data-index={i}
             data-caption={[item.title, item.text].filter(Boolean).join(' · ')}
+            data-video={item.video ? '' : undefined}
+            data-alt={item.alt}
             class="group relative block overflow-hidden rounded-2xl bg-cream"
           >
-            <img
-              src={item.thumb}
-              alt={item.alt}
-              loading="lazy"
-              decoding="async"
-              class="w-full transition-transform duration-[1.2s] ease-out group-hover:scale-110"
-            />
+            {item.video ? (
+              <>
+                <video
+                  src={item.video}
+                  poster={item.thumb}
+                  muted
+                  loop
+                  playsinline
+                  preload="none"
+                  aria-label={item.alt}
+                  data-hover-video
+                  class="w-full transition-transform duration-[1.2s] ease-out group-hover:scale-110"
+                />
+                <span class="absolute top-4 left-4 flex items-center gap-2 rounded-full bg-ink/70 px-3 py-1.5 text-[0.65rem] font-semibold tracking-[0.2em] text-white uppercase backdrop-blur" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="currentColor" class="h-3 w-3"><path d="M8 5v14l11-7z" /></svg> Vídeo
+                </span>
+              </>
+            ) : (
+              <img
+                src={item.thumb}
+                alt={item.alt}
+                loading="lazy"
+                decoding="async"
+                class="w-full transition-transform duration-[1.2s] ease-out group-hover:scale-110"
+              />
+            )}
             <span class="absolute inset-0 bg-gradient-to-t from-ink/85 via-ink/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100 group-focus-visible:opacity-100" />
             <span class="absolute top-4 right-4 flex h-10 w-10 scale-50 items-center justify-center rounded-full bg-white text-brand-500 opacity-0 transition-all duration-500 group-hover:scale-100 group-hover:opacity-100">
               <Icon name="arrow" class="h-4 w-4 -rotate-45" />
@@ -70,6 +93,7 @@ const shown = limit ? items.slice(0, limit) : items;
   <dialog class="lightbox m-auto max-h-none max-w-none bg-transparent p-0 backdrop:bg-ink/95 backdrop:backdrop-blur-sm" aria-label="Visor de imágenes">
     <figure class="flex h-screen w-screen flex-col items-center justify-center p-4">
       <img alt="" class="max-h-[85vh] max-w-full rounded object-contain" data-lb-img />
+      <video class="hidden max-h-[85vh] max-w-full rounded" controls muted playsinline data-lb-video></video>
       <figcaption class="mt-3 text-center text-white" data-lb-caption></figcaption>
     </figure>
     <button type="button" data-lb-close class="absolute top-4 right-4 rounded-full bg-white/10 p-2 text-white hover:bg-white/25" aria-label="Cerrar">
@@ -122,7 +146,8 @@ const shown = limit ? items.slice(0, limit) : items;
       transform: scale(0.9);
     }
   }
-  .lightbox[open] figure img {
+  .lightbox[open] figure img,
+  .lightbox[open] figure video {
     animation: pop 0.5s var(--ease-out-expo);
   }
 </style>
@@ -136,14 +161,36 @@ const shown = limit ? items.slice(0, limit) : items;
     const caption = dialog.querySelector<HTMLElement>('[data-lb-caption]')!;
     let current = 0;
 
+    const video = dialog.querySelector<HTMLVideoElement>('[data-lb-video]')!;
+
     const show = (i: number) => {
       const list = anchors();
       current = (i + list.length) % list.length;
       const a = list[current];
-      img.src = a.href;
-      img.alt = a.querySelector('img')?.alt ?? '';
+      const isVideo = a.dataset.video !== undefined;
+      video.pause();
+      img.classList.toggle('hidden', isVideo);
+      video.classList.toggle('hidden', !isVideo);
+      if (isVideo) {
+        img.removeAttribute('src');
+        video.src = a.href;
+        video.setAttribute('aria-label', a.dataset.alt ?? '');
+        video.play().catch(() => {});
+      } else {
+        video.removeAttribute('src');
+        img.src = a.href;
+        img.alt = a.dataset.alt ?? '';
+      }
       caption.textContent = a.dataset.caption ?? '';
     };
+
+    // Vídeos de la cuadrícula: se reproducen (sin sonido) al pasar el ratón
+    gallery.querySelectorAll<HTMLVideoElement>('[data-hover-video]').forEach((v) => {
+      const a = v.closest('a')!;
+      a.addEventListener('mouseenter', () => v.play().catch(() => {}));
+      a.addEventListener('mouseleave', () => v.pause());
+    });
+    dialog.addEventListener('close', () => video.pause());
 
     gallery.addEventListener('click', (e) => {
       const a = (e.target as HTMLElement).closest<HTMLAnchorElement>('a[data-index]');

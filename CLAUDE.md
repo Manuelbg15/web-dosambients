@@ -20,7 +20,7 @@ Web de **Dos Ambients** (cocinas, baños, armarios y muebles a medida, Castelló
 - `src/components/Footer.astro`, `Gallery.astro` (filtro + lightbox), `PageHero.astro`, `ContactCta.astro`, `ContactForm.astro`, `Icon.astro`, `SocialIcon.astro`, `LegalHolder.astro`.
 - `src/data/site.ts` — datos de la empresa, menú y enlaces legales (fuente única: no repetir teléfonos/direcciones en las páginas).
 - `src/data/links.ts` — **todos los enlaces externos**. Los pendientes llevan `pending: true` + TODO y no se muestran hasta completarlos.
-- `src/data/gallery.ts` — fotos de "Nuestros diseños" (con categoría) y del catálogo.
+- `src/data/gallery.ts` — trabajos de "Nuestros diseños" (categorías: cocina, bano, armarios, muebles; admite vídeos con `video:`) y fotos del catálogo. Las fotos de trabajos reales (oct. 2026) también se usan en el hero, "Elige tu ambiente" (`ambientes.ts`), la portada y Quiénes somos.
 - `src/data/services.ts`, `src/data/ambientes.ts` (selector "Elige tu ambiente" e imágenes del hero), `src/data/news.ts`.
 - `src/content.config.ts` — **noticias**, dos colecciones con el mismo esquema que se unen en `src/data/news.ts` (`getNews()`):
   - `actualitat`: Markdown en `src/content/actualitat/*.md`. Frontmatter: `title`, `description`, `date`, `image?`, `imageAlt?`, `draft`. El nombre del archivo es el slug (`/actualidad/<archivo>/`). `draft: true` no se publica. Si un slug coincide con uno del CMS, manda el Markdown.
@@ -57,6 +57,8 @@ Web de **Dos Ambients** (cocinas, baños, armarios y muebles a medida, Castelló
 - **Nunca HEIF/HEIC ni PDF como imagen**: convertirlos antes.
 - PDFs descargables en `public/documents/`, nombres **sin espacios** (minúsculas y guiones).
 - Los originales sin procesar van en `material/` (ignorado por git). Script de conversión: `material/scripts/process-images.mjs` (usa `sharp`).
+- Fotos de trabajos: `public/images/disenos/<categoría>-NN.webp` (máx. 1920 px) + `thumb/` (640 px). **Nombres genéricos, nunca nombres de clientes** (los originales sí los llevan). `sharp().rotate()` aplica la orientación del móvil y quita metadatos (GPS). Script: `material/scripts/process-new-photos.mjs`.
+- Vídeos en `public/videos/` (MP4 H.264, nombres sin espacios) con portada `public/images/disenos/<id>.webp`. En el visor se abren silenciados.
 
 ## Despliegue
 - `.github/workflows/deploy.yml` (mismo esquema que el resto de webs, p. ej. `espanyolfutsal-web`): en cada push a `main`, al publicar en el CMS (`repository_dispatch`) o a mano (`workflow_dispatch`) hace `npm ci` + `npm run build` y sube `dist/` por FTP con `lftp mirror -R --delete`.
